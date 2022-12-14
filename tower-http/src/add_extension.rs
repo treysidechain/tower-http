@@ -116,18 +116,18 @@ impl<S, T> AddExtension<S, T> {
 impl<ResBody, ReqBody, S, T> Service<Request<ReqBody>> for AddExtension<S, T>
 where
     S: Service<Request<ReqBody>, Response = Response<ResBody>>,
-    T: Clone + Send + Sync + 'static,
+    T: Clone + Send + Sync,
 {
     type Response = S::Response;
     type Error = S::Error;
-    type Future = S::Future;
+    type Future<'a> = S::Future<'a>;
 
     #[inline]
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         self.inner.poll_ready(cx)
     }
 
-    fn call(&mut self, mut req: Request<ReqBody>) -> Self::Future {
+    fn call(&mut self, mut req: Request<ReqBody>) -> Self::Future<'_> {
         req.extensions_mut().insert(self.value.clone());
         self.inner.call(req)
     }

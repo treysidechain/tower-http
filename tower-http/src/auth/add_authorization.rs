@@ -168,13 +168,13 @@ where
 {
     type Response = S::Response;
     type Error = S::Error;
-    type Future = S::Future;
+    type Future<'a> = S::Future<'a>;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         self.inner.poll_ready(cx)
     }
 
-    fn call(&mut self, mut req: Request<ReqBody>) -> Self::Future {
+    fn call(&mut self, mut req: Request<ReqBody>) -> Self::Future<'_> {
         req.headers_mut()
             .insert(http::header::AUTHORIZATION, self.value.clone());
         self.inner.call(req)

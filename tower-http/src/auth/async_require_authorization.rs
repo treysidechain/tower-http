@@ -16,11 +16,11 @@
 //!
 //! impl<B> AsyncAuthorizeRequest<B> for MyAuth
 //! where
-//!     B: Send + Sync + 'static,
+//!     B: Send + Sync,
 //! {
 //!     type RequestBody = B;
 //!     type ResponseBody = Body;
-//!     type Future = BoxFuture<'static, Result<Request<B>, Response<Self::ResponseBody>>>;
+//!     type Future<'a> = BoxFuture<'a, Result<Request<B>, Response<Self::ResponseBody>>>;
 //!
 //!     fn authorize(&mut self, mut request: Request<B>) -> Self::Future {
 //!         Box::pin(async {
